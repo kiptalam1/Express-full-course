@@ -1,0 +1,28 @@
+{
+  "name": "express-full-course",
+  "version": "1.0.0",
+  "description": "Learning express through a tutorial",
+  "homepage": "https://github.com/kiptalam1/Express-full-course#readme",
+  "bugs": {
+    "url": "https://github.com/kiptalam1/Express-full-course/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiptalam1/Express-full-course.git"
+  },
+  "license": "ISC",
+  "author": "Adams",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.mjs",
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
