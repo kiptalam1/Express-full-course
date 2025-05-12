@@ -6,6 +6,12 @@
   "bugs": {
     "url": "https://github.com/kiptalam1/Express-full-course/issues"
   },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kiptalam1/Express-full-course.git"
@@ -13,11 +19,11 @@
   "license": "ISC",
   "author": "Adams",
   "type": "module",
-  "main": "index.mjs",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.mjs",
-    "start": "node index.mjs"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^5.1.0"
