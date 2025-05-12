@@ -53,7 +53,7 @@ app.get('/api/products', (req, res) => {
 // post requests (requires json parser i.e. express.json);
 app.post('/api/users', (req, res) => {
     const { body } = req
-    const newUser = { id: mockUsers.length + 1, ...body }
+    const newUser = { id: mockUsers[mockUsers.length - 1].id + 1, ...body }
     mockUsers.push(newUser)
     return res.status(201).json({
         msg: 'User added successfully',
@@ -86,6 +86,19 @@ app.patch('/api/users/:id', (req, res) => {
     const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
     if (findUserIndex === -1) res.sendStatus(404)
     mockUsers[findUserIndex] = { ...mockUsers[findUserIndex], ...body }
+    return res.sendStatus(200)
+})
+
+// delete requests;
+app.delete('/api/users/:id', (req, res) => {
+    const {
+        params: { id },
+    } = req
+    const parsedId = parseInt(id)
+    if (isNaN(parsedId)) return res.sendStatus(400)
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+    if (findUserIndex === -1) return res.sendStatus(404)
+    mockUsers.splice(findUserIndex, 1)
     return res.sendStatus(200)
 })
 
