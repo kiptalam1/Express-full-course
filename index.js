@@ -1,6 +1,9 @@
 import express from 'express'
 
 const app = express()
+
+app.use(express.json())
+
 const PORT = process.env.PORT || 3000
 
 const mockUsers = [
@@ -46,6 +49,17 @@ app.get('/api/users/:id', (req, res) => {
 // get all products;
 app.get('/api/products', (req, res) => {
     res.send([{ id: 123, name: 'chicken breast', price: 4.99 }])
+})
+
+// post requests (requires json parser i.e. express.json);
+app.post('/api/users', (req, res) => {
+    const { body } = req
+    const newUser = { id: mockUsers.length + 1, ...body }
+    mockUsers.push(newUser)
+
+    return res.status(201).json({
+        msg: 'User added successfully',
+    })
 })
 
 app.listen(PORT, () => {
