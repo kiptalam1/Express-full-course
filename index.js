@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 // get all users;
 app.get('/api/users', (req, res) => {
-    console.log(req.query)
+    // console.log(req.query)
     const {
         query: { filter, value },
     } = req
@@ -40,7 +40,6 @@ app.get('/api/users/:id', (req, res) => {
     const parsedId = parseInt(req.params.id)
     if (isNaN(parsedId))
         return res.status(400).json({ msg: 'Bad request. Invalid ID' })
-
     const findUser = mockUsers.find((user) => user.id === parsedId)
     if (!findUser) return res.sendStatus(404)
     res.status(200).send(findUser)
@@ -56,10 +55,24 @@ app.post('/api/users', (req, res) => {
     const { body } = req
     const newUser = { id: mockUsers.length + 1, ...body }
     mockUsers.push(newUser)
-
     return res.status(201).json({
         msg: 'User added successfully',
     })
+})
+
+// put requests;
+app.put('/api/users/:id', (req, res) => {
+    const {
+        params: { id },
+        body,
+    } = req
+    const parsedId = parseInt(id)
+
+    if (isNaN(parsedId)) return res.sendStatus(400)
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+    if (findUserIndex === -1) return res.sendStatus(404)
+    mockUsers[findUserIndex] = { id: parsedId, ...body }
+    res.sendStatus(200)
 })
 
 app.listen(PORT, () => {
