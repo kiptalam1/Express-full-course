@@ -7,9 +7,9 @@ app.use(express.json())
 const PORT = process.env.PORT || 3000
 
 const mockUsers = [
-    { id: 1, name: 'adams' },
-    { id: 2, name: 'evans' },
-    { id: 3, name: 'jela' },
+    { id: 1, name: 'adams', username: 'adama' },
+    { id: 2, name: 'evans', username: 'snave' },
+    { id: 3, name: 'jela', username: 'chel' },
 ]
 
 app.get('/', (req, res) => {
@@ -60,7 +60,7 @@ app.post('/api/users', (req, res) => {
     })
 })
 
-// put requests;
+// put requests (all user fields must be included to avoid null values);
 app.put('/api/users/:id', (req, res) => {
     const {
         params: { id },
@@ -73,6 +73,20 @@ app.put('/api/users/:id', (req, res) => {
     if (findUserIndex === -1) return res.sendStatus(404)
     mockUsers[findUserIndex] = { id: parsedId, ...body }
     res.sendStatus(200)
+})
+
+// patch requests (updates only the changed fields);
+app.patch('/api/users/:id', (req, res) => {
+    const {
+        body,
+        params: { id },
+    } = req
+    const parsedId = parseInt(id)
+    if (isNaN(parsedId)) return res.sendStatus(400)
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+    if (findUserIndex === -1) res.sendStatus(404)
+    mockUsers[findUserIndex] = { ...mockUsers[findUserIndex], ...body }
+    return res.sendStatus(200)
 })
 
 app.listen(PORT, () => {
