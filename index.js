@@ -1,4 +1,11 @@
 import express from 'express'
+import {
+    query,
+    validationResult,
+    matchedData,
+    checkSchema,
+} from 'express-validator'
+import { userValidator } from './utils/validationSchema.js'
 
 const app = express()
 
@@ -14,14 +21,16 @@ const mockUsers = [
 
 // middleware
 const resolveIndexByUserId = (req, res, next) => {
-    const { params: { id }, } = req;
+    const {
+        params: { id },
+    } = req
     const parsedId = parseInt(id)
 
     if (isNaN(parsedId)) return res.sendStatus(400)
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId);
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
     if (findUserIndex === -1) return res.sendStatus(404)
-    req.findUserIndex = findUserIndex;
-    next();
+    req.findUserIndex = findUserIndex
+    next()
 }
 
 app.get('/', (req, res) => {
@@ -60,9 +69,15 @@ app.get('/api/products', (req, res) => {
 })
 
 // post requests (requires json parser i.e. express.json);
-app.post('/api/users', (req, res) => {
-    const { body } = req
-    const newUser = { id: mockUsers[mockUsers.length - 1].id + 1, ...body }
+app.post('/api/users', checkSchema(userValidator), (req, res) => {
+    const results = validationResult(req)
+    console.log(results)
+
+    // if there are errors;
+    if (!results.isEmpty())
+        return res.status(400).send({ errors: results.array() })
+    const data = matchedData(req)
+    const newUser = { id: mockUsers[mockUsers.length - 1].id + 1, ...data }
     mockUsers.push(newUser)
     return res.status(201).json({
         msg: 'User added successfully',
