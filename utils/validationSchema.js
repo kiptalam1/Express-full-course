@@ -22,4 +22,11 @@ export const userValidator = {
             errorMessage: 'Username must be a string of characters.',
         },
     },
+    password: {
+        exists: { errorMessage: 'Password is required' },
+        isLength: {
+            options: { min: 3 },
+            errorMessage: 'Password must be at least 3 characters long',
+        },
+    },
 }

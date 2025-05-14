@@ -3,6 +3,7 @@ import { validationResult, matchedData, checkSchema } from 'express-validator'
 import { userValidator } from '../utils/validationSchema.js'
 import { resolveIndexByUserId } from '../middleware/index-middleware.js'
 import { mockUsers } from '../utils/constants.js'
+import { User } from '../mongoose/schemas/user.js'
 
 const router = express.Router()
 
@@ -31,19 +32,26 @@ router.get('/api/users/:id', resolveIndexByUserId, (req, res) => {
 })
 
 // post requests (requires json parser i.e. express.json);
-router.post('/api/users', checkSchema(userValidator), (req, res) => {
+router.post('/api/users', checkSchema(userValidator), async (req, res) => {
     const results = validationResult(req)
-    console.log(results)
+    console.log(results.array())
 
     // if there are errors;
     if (!results.isEmpty())
         return res.status(400).send({ errors: results.array() })
     const data = matchedData(req)
-    const newUser = { id: mockUsers[mockUsers.length - 1].id + 1, ...data }
-    mockUsers.push(newUser)
-    return res.status(201).json({
-        msg: 'User added successfully',
-    })
+    const newUser = new User(data)
+    try {
+        const savedUser = await newUser.save()
+        return res.status(201).json({
+            msg: 'User added successfully',
+            data: savedUser,
+        })
+    } catch (error) {
+        return res
+            .status(400)
+            .json({ error: 'Failed to save user', details: error.message })
+    }
 })
 
 // put requests (all user fields must be included to avoid null values);

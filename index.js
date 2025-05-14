@@ -2,10 +2,21 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config()
 import usersRoutes from './routes/users.js'
 import productsRoutes from './routes/products.js'
 import './strategies/local-strategy.js'
 const app = express()
+
+// connect to mongo db;
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log('connected to mongo'))
+    .catch((err) => {
+        console.log(`Error: ${err}`)
+    })
 
 app.use(express.json())
 app.use(cookieParser())
