@@ -4,6 +4,7 @@ import { userValidator } from '../utils/validationSchema.js'
 import { resolveIndexByUserId } from '../middleware/index-middleware.js'
 import { mockUsers } from '../utils/constants.js'
 import { User } from '../mongoose/schemas/user.js'
+import { hashPassword } from '../utils/helpers.js'
 
 const router = express.Router()
 
@@ -40,6 +41,8 @@ router.post('/api/users', checkSchema(userValidator), async (req, res) => {
     if (!results.isEmpty())
         return res.status(400).send({ errors: results.array() })
     const data = matchedData(req)
+    data.password = hashPassword(data.password)
+    console.log('Validated data:', data)
     const newUser = new User(data)
     try {
         const savedUser = await newUser.save()

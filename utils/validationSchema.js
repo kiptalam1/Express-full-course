@@ -23,7 +23,7 @@ export const userValidator = {
         },
     },
     password: {
-        exists: { errorMessage: 'Password is required' },
+        notEmpty: { errorMessage: 'Password is required' },
         isLength: {
             options: { min: 3 },
             errorMessage: 'Password must be at least 3 characters long',
