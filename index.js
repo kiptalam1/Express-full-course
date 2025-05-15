@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
 import mongoose from 'mongoose'
+import MongoStore from 'connect-mongo'
 import dotenv from 'dotenv'
 dotenv.config()
 import usersRoutes from './routes/users.js'
@@ -28,6 +29,9 @@ app.use(
         cookie: {
             maxAge: 600000 * 60,
         },
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+        }),
     })
 )
 app.use(passport.initialize())
